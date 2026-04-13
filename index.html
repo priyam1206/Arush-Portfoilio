@@ -1,12 +1,527 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My React App</title>
+    <title>Aarush Sharma | Cyber Security Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #020000;
+            color: #cbd5e1; /* text-slate-300 */
+        }
+        
+        .font-jetbrains {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background-color: rgba(239, 68, 68, 0.3); /* red-500/30 */
+        }
+
+        /* Scanning Animation */
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(1000%); }
+        }
+        .animate-scan {
+            animation: scan 10s linear infinite;
+        }
+
+        /* Blueprint Background */
+        .bg-blueprint {
+            background-image: linear-gradient(#ff0000 1.5px, transparent 1.5px), linear-gradient(90deg, #ff0000 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+        }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
-    <script src="/static/js/bundle.js"></script>
+<body class="min-h-screen relative overflow-x-hidden">
+
+    <!-- Particle Background Canvas -->
+    <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-8">
+        <div class="max-w-7xl mx-auto px-8 flex justify-between items-center">
+            <!-- Logo Section -->
+            <div class="flex items-center space-x-4 group cursor-pointer shrink-0">
+                <div class="w-10 h-10 border border-red-500/60 bg-red-950/40 flex items-center justify-center font-bold text-lg group-hover:border-red-400 transition-all duration-500 rounded-sm shadow-[0_0_10px_rgba(255,0,0,0.2)]">
+                    <span class="text-red-500 font-jetbrains">AS</span>
+                </div>
+                <span class="font-bold text-lg tracking-tight hidden sm:block uppercase text-white font-jetbrains">
+                    Aarush_Sharma
+                </span>
+            </div>
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex flex-1 justify-end items-center space-x-12">
+                <div class="flex items-center space-x-10">
+                    <a href="#about" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest font-jetbrains">About</a>
+                    <a href="#education" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest font-jetbrains">Education</a>
+                    <a href="#projects" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest font-jetbrains">Projects</a>
+                    <a href="#services" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest font-jetbrains">Services</a>
+                    <a href="#contact" class="text-[12px] font-bold text-slate-400 hover:text-red-500 transition-all uppercase tracking-widest font-jetbrains">Contact</a>
+                </div>
+                <a href="mailto:aarush23012006@gmail.com" class="border border-red-500/50 hover:border-red-400 px-6 py-2.5 text-[11px] uppercase tracking-widest font-bold transition-all bg-red-950/20 hover:bg-red-500/20 text-red-500 font-jetbrains shadow-[0_0_15px_rgba(255,0,0,0.1)] hover:shadow-[0_0_20px_rgba(255,0,0,0.2)]">
+                    /INIT_COMM
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-red-500">
+                <i data-lucide="menu" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#050000]/95 backdrop-blur-xl border-b border-red-500/30 p-6 flex-col space-y-4">
+             <a href="#about" class="block text-[12px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest font-jetbrains">About</a>
+             <a href="#education" class="block text-[12px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest font-jetbrains">Education</a>
+             <a href="#projects" class="block text-[12px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest font-jetbrains">Projects</a>
+             <a href="#services" class="block text-[12px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest font-jetbrains">Services</a>
+             <a href="#contact" class="block text-[12px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-widest font-jetbrains">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero / About -->
+    <section id="about" class="relative pt-48 pb-10">
+        <div class="max-w-7xl mx-auto px-8 relative z-10">
+            <!-- TechGrid Component -->
+            <div class="relative border border-red-500/40 bg-black/90 backdrop-blur-md mb-24 group overflow-hidden">
+                <div class="absolute inset-0 opacity-[0.08] pointer-events-none bg-blueprint"></div>
+                <!-- Corner Brackets -->
+                <div class="absolute -top-[1px] -left-[1px] w-8 h-8 border-t-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -top-[1px] -right-[1px] w-8 h-8 border-t-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -left-[1px] w-8 h-8 border-b-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -right-[1px] w-8 h-8 border-b-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <!-- Animated Line -->
+                <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity">
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan shadow-[0_0_10px_rgba(255,0,0,0.8)]"></div>
+                </div>
+                <!-- Labels -->
+                <div class="absolute -top-3 left-6 px-3 bg-[#050000] text-[9px] font-bold text-red-500 font-jetbrains uppercase tracking-[0.3em] z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">SYSTEM_FRAME::BIO_IDENTITY</div>
+                <div class="absolute -bottom-2.5 right-6 px-3 bg-[#050000] text-[9px] font-bold text-red-600 font-jetbrains uppercase z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">CORE_ID::0x<span class="random-id"></span></div>
+                
+                <!-- Content -->
+                <div class="relative z-10 py-24 flex flex-col items-center text-center">
+                    <div class="inline-flex items-center space-x-3 bg-red-950/40 border border-red-500/30 px-4 py-1.5 mb-10 rounded-sm font-jetbrains shadow-[0_0_15px_rgba(255,0,0,0.1)]">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                        </span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-red-400">[ STATUS: ADMIN_VERIFIED ]</span>
+                    </div>
+                    
+                    <h1 class="text-6xl md:text-9xl font-extrabold mb-8 tracking-tighter text-white font-jetbrains uppercase">
+                        Aarush <span class="text-red-500 drop-shadow-[0_0_25px_rgba(255,0,0,0.4)]">Sharma</span>
+                    </h1>
+                    
+                    <div class="w-full flex items-center justify-center space-x-4 my-20">
+                        <div class="h-[1.5px] flex-1 max-w-[150px] bg-gradient-to-r from-transparent to-red-500/50"></div>
+                        <div class="text-[11px] font-bold font-jetbrains text-red-500 tracking-[0.5em] uppercase px-4 border-x border-red-500/30">Data_Profile_Segment</div>
+                        <div class="h-[1.5px] flex-1 max-w-[150px] bg-gradient-to-l from-transparent to-red-500/50"></div>
+                    </div>
+
+                    <p class="text-lg md:text-2xl text-slate-300 max-w-3xl font-light mb-16 leading-relaxed tracking-tight px-4">
+                        Designing secure software ecosystems via 
+                        <span class="text-red-500 font-semibold underline decoration-red-500/30 underline-offset-4"> defensive_programming </span> 
+                        and 
+                        <span class="text-red-500 font-semibold underline decoration-red-500/30 underline-offset-4"> tactical_security_advisory.</span>
+                    </p>
+
+                    <div class="flex flex-wrap justify-center gap-6 px-4">
+                        <div class="bg-black/95 border border-red-500/30 p-10 w-72 transition-all hover:bg-red-950/20 hover:border-red-400 group relative shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                            <i data-lucide="shield" class="text-red-500 w-8 h-8 mb-4 mx-auto group-hover:scale-110 transition-transform group-hover:text-red-400"></i>
+                            <p class="text-[10px] text-red-500/60 uppercase tracking-widest mb-1 font-jetbrains font-bold">SPECIALIZATION</p>
+                            <p class="text-sm font-bold tracking-widest uppercase text-white font-jetbrains">Firewall Architect</p>
+                            <div class="absolute top-2 right-2 text-[8px] text-red-700 font-jetbrains font-bold">DEF_01</div>
+                        </div>
+                        <div class="bg-black/95 border border-red-500/30 p-10 w-72 transition-all hover:bg-red-950/20 hover:border-red-400 group relative shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                            <i data-lucide="lock" class="text-red-600 w-8 h-8 mb-4 mx-auto group-hover:scale-110 transition-transform group-hover:text-red-400"></i>
+                            <p class="text-[10px] text-red-500/60 uppercase tracking-widest mb-1 font-jetbrains font-bold">SECTOR</p>
+                            <p class="text-sm font-bold tracking-widest uppercase text-white font-jetbrains">Privacy Systems</p>
+                            <div class="absolute top-2 right-2 text-[8px] text-red-700 font-jetbrains font-bold">PRV_04</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-10">
+        <div class="max-w-7xl mx-auto px-8 relative z-10">
+            <div class="relative border border-red-500/40 bg-black/90 backdrop-blur-md mb-24 group overflow-hidden">
+                <div class="absolute inset-0 opacity-[0.08] pointer-events-none bg-blueprint"></div>
+                <!-- Corner Brackets -->
+                <div class="absolute -top-[1px] -left-[1px] w-8 h-8 border-t-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -top-[1px] -right-[1px] w-8 h-8 border-t-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -left-[1px] w-8 h-8 border-b-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -right-[1px] w-8 h-8 border-b-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity">
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan shadow-[0_0_10px_rgba(255,0,0,0.8)]"></div>
+                </div>
+                <div class="absolute -top-3 left-6 px-3 bg-[#050000] text-[9px] font-bold text-red-500 font-jetbrains uppercase tracking-[0.3em] z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">SYSTEM_FRAME::ACADEMIC_PIPELINE</div>
+                <div class="absolute -bottom-2.5 right-6 px-3 bg-[#050000] text-[9px] font-bold text-red-600 font-jetbrains uppercase z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">CORE_ID::0x<span class="random-id"></span></div>
+                
+                <div class="relative z-10 p-12 md:p-20">
+                    <div class="max-w-xl mb-16">
+                        <h2 class="text-4xl font-bold mb-4 text-white tracking-tighter uppercase font-jetbrains">Education_Path</h2>
+                        <div class="w-24 h-[3px] bg-red-500 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                    </div>
+
+                    <div class="space-y-12">
+                        <!-- University -->
+                        <div class="flex flex-col md:flex-row gap-8 items-start group">
+                            <div class="w-16 h-16 shrink-0 border border-red-500/30 flex items-center justify-center bg-red-950/10 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.1)] group-hover:border-red-500 transition-colors">
+                                <i data-lucide="graduation-cap" class="w-8 h-8"></i>
+                            </div>
+                            <div class="flex-1 border-l-2 border-red-500/10 pl-8 group-hover:border-red-500/40 transition-colors">
+                                <div class="text-[10px] font-bold text-red-500 font-jetbrains tracking-[0.4em] mb-2 uppercase">Current_Node</div>
+                                <h3 class="text-2xl font-bold text-white font-jetbrains mb-2">Manipal University Jaipur</h3>
+                                <p class="text-lg text-red-400/80 font-semibold mb-4">Bachelor of Technology in Electronics and Communication Engineering</p>
+                                <div class="inline-block px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-sm">
+                                    <p class="text-[12px] font-bold text-red-500 font-jetbrains uppercase tracking-widest">Major Focus: Cyber Security</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- School -->
+                        <div class="flex flex-col md:flex-row gap-8 items-start group">
+                            <div class="w-16 h-16 shrink-0 border border-red-500/30 flex items-center justify-center bg-red-950/10 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.1)] group-hover:border-red-500 transition-colors">
+                                <i data-lucide="book-open" class="w-8 h-8"></i>
+                            </div>
+                            <div class="flex-1 border-l-2 border-red-500/10 pl-8 group-hover:border-red-500/40 transition-colors">
+                                <div class="text-[10px] font-bold text-red-800 font-jetbrains tracking-[0.4em] mb-2 uppercase">Legacy_Node</div>
+                                <h3 class="text-2xl font-bold text-white font-jetbrains mb-2">Jayshree Periwal High School</h3>
+                                <p class="text-slate-400 font-light max-w-2xl italic leading-relaxed">Foundational education and early immersion into technological logic and systems.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="py-10">
+        <div class="max-w-7xl mx-auto px-8 relative z-10">
+            <div class="relative border border-red-500/40 bg-black/90 backdrop-blur-md mb-24 group overflow-hidden">
+                <div class="absolute inset-0 opacity-[0.08] pointer-events-none bg-blueprint"></div>
+                <!-- Corner Brackets -->
+                <div class="absolute -top-[1px] -left-[1px] w-8 h-8 border-t-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -top-[1px] -right-[1px] w-8 h-8 border-t-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -left-[1px] w-8 h-8 border-b-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -right-[1px] w-8 h-8 border-b-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity">
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan shadow-[0_0_10px_rgba(255,0,0,0.8)]"></div>
+                </div>
+                <div class="absolute -top-3 left-6 px-3 bg-[#050000] text-[9px] font-bold text-red-500 font-jetbrains uppercase tracking-[0.3em] z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">SYSTEM_FRAME::ASSET_DEPLOYMENT</div>
+                <div class="absolute -bottom-2.5 right-6 px-3 bg-[#050000] text-[9px] font-bold text-red-600 font-jetbrains uppercase z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">CORE_ID::0x<span class="random-id"></span></div>
+                
+                <div class="relative z-10 p-8 md:p-16">
+                    <div class="max-w-xl mb-16">
+                        <h2 class="text-4xl font-bold mb-4 text-white tracking-tighter uppercase font-jetbrains">Case_Studies</h2>
+                        <div class="w-24 h-[3px] bg-red-500 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                        <p class="mt-4 text-red-500/70 font-jetbrains text-[10px] font-bold uppercase tracking-widest">/Loading project data...</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                        <!-- Project 1 -->
+                        <div class="group bg-black/95 border border-red-500/20 p-10 transition-all duration-500 hover:border-red-500 relative overflow-hidden shadow-2xl">
+                            <div class="absolute top-4 right-4 text-[10px] font-bold text-red-500/30 font-jetbrains tracking-[0.2em]">NODE_X1</div>
+                            <span class="text-[11px] font-bold text-red-500 uppercase tracking-[0.4em] mb-4 block font-jetbrains">CYBER_SECURITY</span>
+                            <h3 class="text-3xl font-bold mb-4 text-white tracking-tighter font-jetbrains">CHAKRAVYUH</h3>
+                            <p class="text-slate-400 mb-8 leading-relaxed font-light text-base group-hover:text-slate-200 transition-colors">A Level 1 cyber firewall and auto-targeting system. Developed to detect malware, trace attacker locations, and automate defensive counter-measures in real-time.</p>
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Threat_Intel</span>
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Automated_Defense</span>
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Geo_Location</span>
+                            </div>
+                            <button class="flex items-center space-x-3 text-red-500 text-[11px] uppercase tracking-[0.3em] font-bold group/btn font-jetbrains hover:text-red-400">
+                                <span>/DECRYPT_ARCHIVE</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Project 2 -->
+                        <div class="group bg-black/95 border border-red-500/20 p-10 transition-all duration-500 hover:border-red-500 relative overflow-hidden shadow-2xl">
+                            <div class="absolute top-4 right-4 text-[10px] font-bold text-red-500/30 font-jetbrains tracking-[0.2em]">NODE_X2</div>
+                            <span class="text-[11px] font-bold text-red-500 uppercase tracking-[0.4em] mb-4 block font-jetbrains">SOFTWARE_DESIGN</span>
+                            <h3 class="text-3xl font-bold mb-4 text-white tracking-tighter font-jetbrains">PRIYN</h3>
+                            <p class="text-slate-400 mb-8 leading-relaxed font-light text-base group-hover:text-slate-200 transition-colors">A private, high-security portal engineered for seamless communication. Personally designed the software logic to ensure end-to-end reliability, mirroring messaging standards with custom protocols.</p>
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Software_Design</span>
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Encrypted_Messaging</span>
+                                <span class="px-3 py-1 border border-red-500/40 text-[10px] uppercase tracking-widest font-bold text-red-500 font-jetbrains bg-red-500/10">Logic_Implem</span>
+                            </div>
+                            <button class="flex items-center space-x-3 text-red-500 text-[11px] uppercase tracking-[0.3em] font-bold group/btn font-jetbrains hover:text-red-400">
+                                <span>/DECRYPT_ARCHIVE</span>
+                                <i data-lucide="chevron-right" class="w-4 h-4 group-hover/btn:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="py-10">
+        <div class="max-w-7xl mx-auto px-8 relative z-10">
+            <div class="relative border border-red-500/40 bg-black/90 backdrop-blur-md mb-24 group overflow-hidden">
+                <div class="absolute inset-0 opacity-[0.08] pointer-events-none bg-blueprint"></div>
+                <!-- Corner Brackets -->
+                <div class="absolute -top-[1px] -left-[1px] w-8 h-8 border-t-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -top-[1px] -right-[1px] w-8 h-8 border-t-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -left-[1px] w-8 h-8 border-b-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -right-[1px] w-8 h-8 border-b-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity">
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan shadow-[0_0_10px_rgba(255,0,0,0.8)]"></div>
+                </div>
+                <div class="absolute -top-3 left-6 px-3 bg-[#050000] text-[9px] font-bold text-red-500 font-jetbrains uppercase tracking-[0.3em] z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">SYSTEM_FRAME::OPERATIONAL_CAPACITY</div>
+                <div class="absolute -bottom-2.5 right-6 px-3 bg-[#050000] text-[9px] font-bold text-red-600 font-jetbrains uppercase z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">CORE_ID::0x<span class="random-id"></span></div>
+                
+                <div class="relative z-10 p-12 md:p-20 grid grid-cols-1 md:grid-cols-3 gap-16">
+                    <div class="flex flex-col space-y-6 group">
+                        <div class="w-16 h-16 border-2 border-red-500/30 flex items-center justify-center text-red-500 group-hover:text-red-400 group-hover:border-red-400 transition-all bg-black shadow-[0_0_20px_rgba(255,0,0,0.1)] relative">
+                            <i data-lucide="cpu" class="w-7 h-7"></i>
+                            <div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,0,0,1)]"></div>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase tracking-widest text-white font-jetbrains">Arch Patterns</h3>
+                        <p class="text-slate-400 leading-relaxed text-sm font-light group-hover:text-slate-200 transition-colors">Scalable architectural patterns for secure high-stakes apps.</p>
+                    </div>
+
+                    <div class="flex flex-col space-y-6 group">
+                        <div class="w-16 h-16 border-2 border-red-500/30 flex items-center justify-center text-red-500 group-hover:text-red-400 group-hover:border-red-400 transition-all bg-black shadow-[0_0_20px_rgba(255,0,0,0.1)] relative">
+                            <i data-lucide="target" class="w-7 h-7"></i>
+                            <div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,0,0,1)]"></div>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase tracking-widest text-white font-jetbrains">Security Adv</h3>
+                        <p class="text-slate-400 leading-relaxed text-sm font-light group-hover:text-slate-200 transition-colors">Deep-dive vulnerability assessments and perimeter defense.</p>
+                    </div>
+
+                    <div class="flex flex-col space-y-6 group">
+                        <div class="w-16 h-16 border-2 border-red-500/30 flex items-center justify-center text-red-500 group-hover:text-red-400 group-hover:border-red-400 transition-all bg-black shadow-[0_0_20px_rgba(255,0,0,0.1)] relative">
+                            <i data-lucide="shield" class="w-7 h-7"></i>
+                            <div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_rgba(255,0,0,1)]"></div>
+                        </div>
+                        <h3 class="text-xl font-bold uppercase tracking-widest text-white font-jetbrains">Threat Hunting</h3>
+                        <p class="text-slate-400 leading-relaxed text-sm font-light group-hover:text-slate-200 transition-colors">Identifying malware signatures and adversarial traces.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-10">
+        <div class="max-w-7xl mx-auto px-8 relative z-10">
+            <div class="relative border border-red-500/40 bg-black/90 backdrop-blur-md mb-24 group overflow-hidden">
+                <div class="absolute inset-0 opacity-[0.08] pointer-events-none bg-blueprint"></div>
+                <!-- Corner Brackets -->
+                <div class="absolute -top-[1px] -left-[1px] w-8 h-8 border-t-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -top-[1px] -right-[1px] w-8 h-8 border-t-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -left-[1px] w-8 h-8 border-b-2 border-l-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute -bottom-[1px] -right-[1px] w-8 h-8 border-b-2 border-r-2 border-red-500 z-20 group-hover:w-12 group-hover:h-12 group-hover:border-red-400 transition-all duration-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]"></div>
+                <div class="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40 group-hover:opacity-70 transition-opacity">
+                    <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent animate-scan shadow-[0_0_10px_rgba(255,0,0,0.8)]"></div>
+                </div>
+                <div class="absolute -top-3 left-6 px-3 bg-[#050000] text-[9px] font-bold text-red-500 font-jetbrains uppercase tracking-[0.3em] z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">SYSTEM_FRAME::UPLINK_ESTABLISHMENT</div>
+                <div class="absolute -bottom-2.5 right-6 px-3 bg-[#050000] text-[9px] font-bold text-red-600 font-jetbrains uppercase z-20 border border-red-500/50 shadow-[0_0_8px_rgba(255,0,0,0.2)]">CORE_ID::0x<span class="random-id"></span></div>
+                
+                <div class="relative z-10 p-16 md:p-24 text-center">
+                    <h2 class="text-5xl md:text-7xl font-bold mb-12 text-white tracking-tighter uppercase font-jetbrains">
+                        INITIATE_<span class="text-red-500 drop-shadow-[0_0_20px_rgba(255,0,0,0.5)]">COMMS</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto mb-20">
+                        <a href="mailto:aarush23012006@gmail.com" class="p-10 border border-red-500/30 bg-black hover:border-red-400 transition-all group relative overflow-hidden shadow-2xl block">
+                            <div class="absolute top-0 left-0 w-full h-[2px] bg-red-500/40 group-hover:bg-red-400 transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                            <i data-lucide="mail" class="text-red-500 mb-4 group-hover:scale-110 transition-transform mx-auto w-8 h-8"></i>
+                            <p class="text-[10px] text-red-500 uppercase tracking-[0.3em] mb-2 font-jetbrains font-bold">ENCRYPTED_MAIL</p>
+                            <p class="text-sm font-bold text-white font-jetbrains">aarush23012006@gmail.com</p>
+                        </a>
+                        <a href="https://instagram.com/aarush23012006" target="_blank" class="p-10 border border-red-500/30 bg-black hover:border-red-400 transition-all group relative overflow-hidden shadow-2xl block">
+                             <div class="absolute top-0 left-0 w-full h-[2px] bg-red-500/40 group-hover:bg-red-400 transition-colors shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                            <i data-lucide="instagram" class="text-red-500 mb-4 group-hover:scale-110 transition-transform mx-auto w-8 h-8"></i>
+                            <p class="text-[10px] text-red-500 uppercase tracking-[0.3em] mb-2 font-jetbrains font-bold">INSTA_SIGNAL</p>
+                            <p class="text-sm font-bold text-white font-jetbrains">@aarush23012006</p>
+                        </a>
+                    </div>
+
+                    <div class="flex justify-center space-x-12">
+                        <i data-lucide="github" class="w-7 h-7 text-red-800 hover:text-red-500 cursor-pointer transition-all hover:scale-110"></i>
+                        <i data-lucide="globe" class="w-7 h-7 text-red-800 hover:text-red-500 cursor-pointer transition-all hover:scale-110"></i>
+                        <i data-lucide="external-link" class="w-7 h-7 text-red-800 hover:text-red-500 cursor-pointer transition-all hover:scale-110"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center relative z-10 font-jetbrains border-t border-red-500/30 bg-black/40">
+        <p class="text-[12px] text-red-500 uppercase tracking-[0.6em] font-bold mb-4 shadow-red-500/20">
+            &copy; 2024 Aarush Sharma • Unauthorized Access Forbidden
+        </p>
+        <p class="text-[10px] text-red-800 uppercase tracking-[0.3em] max-w-lg mx-auto font-bold">
+            PROTOCOL_X-99 // SECURE_SOCKET_LAYER_ACTIVE // 
+            ENV_ID: 1.0.4-TACTICAL_HUD // DAHMI_KALAN_IN_NODE
+        </p>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Generate Random Hex IDs
+        document.querySelectorAll('.random-id').forEach(el => {
+            el.textContent = Math.floor(Math.random() * 9999).toString(16).toUpperCase();
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-[#050000]/98', 'backdrop-blur-2xl', 'border-b', 'border-red-500/30', 'py-4');
+                navbar.classList.remove('bg-transparent', 'py-8');
+            } else {
+                navbar.classList.remove('bg-[#050000]/98', 'backdrop-blur-2xl', 'border-b', 'border-red-500/30', 'py-4');
+                navbar.classList.add('bg-transparent', 'py-8');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('flex');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        });
+
+        // Particle Background Logic
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        const particles = [];
+        const particleCount = 70;
+        const mouse = { x: null, y: null, radius: 180 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.6 - 0.3;
+                this.speedY = Math.random() * 0.6 - 0.3;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < mouse.radius) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    this.x += (dx / distance) * force * -2;
+                    this.y += (dy / distance) * force * -2;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.5)'; // red-500
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 160) {
+                        let opacity = 1 - (distance / 160);
+                        ctx.strokeStyle = `rgba(239, 68, 68, ${opacity * 0.18})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(239, 68, 68, 0.04)';
+            ctx.lineWidth = 1;
+            const step = 50;
+            for (let x = 0; x < canvas.width; x += step) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += step) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+            particles.forEach(p => { p.update(); p.draw(); });
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+    </script>
 </body>
 </html>
